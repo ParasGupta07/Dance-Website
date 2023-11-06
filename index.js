@@ -4,10 +4,29 @@ const app = express();
 const bodyparser = require('body-parser')
 const mongoose = require('mongoose');
 main().catch(err => console.log(err));
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/contactDance');
-}
-const port = 80;
+
+const uri = "mongodb+srv://parasgupta:JxRqxCXBM1XseycA@cluster0.kz7yo13.mongodb.net/?retryWrites=true&w=majority";
+
+const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+  });
+  async function run() {
+    try {
+      // Connect the client to the server	(optional starting in v4.7)
+      await client.connect();
+      // Send a ping to confirm a successful connection
+      await client.db("admin").command({ ping: 1 });
+      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+  }
+  run().catch(console.dir);
 
 // DEFINE MONGOOSE SCHEMA\
 const contactSchema = new mongoose.Schema({
